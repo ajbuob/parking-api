@@ -2,7 +2,6 @@ package com.abuob.parking.service;
 
 import com.abuob.parking.dto.HourlyPriceDTO;
 import com.abuob.parking.enums.DayOfWeekEnum;
-import com.abuob.parking.repository.InMemoryParkingRateRepository;
 import com.abuob.parking.repository.ParkingRateRepository;
 import com.abuob.parking.utils.DateUtil;
 import org.slf4j.Logger;
