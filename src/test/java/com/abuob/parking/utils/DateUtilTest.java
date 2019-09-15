@@ -46,8 +46,6 @@ public class DateUtilTest {
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Australia/Sydney"));
         ZonedDateTime nowStartOfDay = DateUtil.withStartOfDay(now);
 
-        System.out.println(now);
-
         ZonedDateTime currentStartOfDay;
         DayOfWeekEnum currentDayOfWeekEnum;
 
