@@ -8,27 +8,28 @@ import com.abuob.parking.service.ParkingServiceException;
 import com.abuob.parking.utils.ParkingRateUtil;
 import com.abuob.parking.web.request.ParkingRateCreateRequest;
 import com.abuob.parking.web.request.ParkingRateListWrapper;
-import com.abuob.parking.web.request.ParkingRateRequest;
 import com.abuob.parking.web.response.ParkingRateResponse;
 import com.google.common.collect.Lists;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("api/parking")
+@Api(description = "Operations pertaining to parking rate/price functionality")
 public class ParkingController {
 
     private static final Logger logger = LoggerFactory.getLogger(ParkingController.class);
@@ -40,15 +41,30 @@ public class ParkingController {
     @Autowired
     private ParkingRateService parkingRateService;
 
-    @GetMapping(value = "rate", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<ParkingRateResponse> findCurrentRate(@RequestBody ParkingRateRequest parkingRateRequest) {
+    @ApiOperation(value = "Retrieves a the current price for a time interval in the system")
+    @GetMapping(value = "rate/start/{startDateTime}/end/{endDateTime}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<ParkingRateResponse> findCurrentRate(
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime startDateTime,
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime endDateTime) {
         ParkingRateResponse parkingRateResponse = new ParkingRateResponse();
         parkingRateResponse.setStatusCode(0);
         parkingRateResponse.setMessage("");
 
         Integer price;
-        ZonedDateTime startDateTime = parkingRateRequest.getStartTime();
-        ZonedDateTime endDateTime = parkingRateRequest.getEndTime();
+
+        //No start date
+        if (Objects.isNull(startDateTime)) {
+            parkingRateResponse.setStatusCode(ParkingApiErrorEnum.START_DATE_MISSING.getErrorCode());
+            parkingRateResponse.setMessage(ParkingApiErrorEnum.START_DATE_MISSING.getErrorMessage());
+            return new ResponseEntity<>(parkingRateResponse, HttpStatus.BAD_REQUEST);
+        }
+
+        //No end date
+        if (Objects.isNull(endDateTime)) {
+            parkingRateResponse.setStatusCode(ParkingApiErrorEnum.END_DATE_MISSING.getErrorCode());
+            parkingRateResponse.setMessage(ParkingApiErrorEnum.END_DATE_MISSING.getErrorMessage());
+            return new ResponseEntity<>(parkingRateResponse, HttpStatus.BAD_REQUEST);
+        }
 
         parkingRateResponse.setStartTime(startDateTime);
         parkingRateResponse.setEndTime(endDateTime);
@@ -78,6 +94,7 @@ public class ParkingController {
         }
     }
 
+    @ApiOperation(value = "Add/Update a list of parking rates in the system")
     @PutMapping(value = "rates", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<ParkingRateListWrapper> createParkingRates(@RequestBody ParkingRateListWrapper parkingRateListWrapper) {
 

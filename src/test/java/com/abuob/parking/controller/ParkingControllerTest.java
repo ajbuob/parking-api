@@ -5,7 +5,6 @@ import com.abuob.parking.service.ParkingRateService;
 import com.abuob.parking.service.ParkingServiceException;
 import com.abuob.parking.web.request.ParkingRateCreateRequest;
 import com.abuob.parking.web.request.ParkingRateListWrapper;
-import com.abuob.parking.web.request.ParkingRateRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -25,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.mockito.Mockito.anyList;
@@ -45,6 +45,8 @@ public class ParkingControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+
     @Test
     public void test_findCurrentRate_Success() throws Exception {
 
@@ -53,14 +55,12 @@ public class ParkingControllerTest {
         ZonedDateTime endTime =
                 ZonedDateTime.of(2019, 9, 12, 14, 0, 0, 0, ZoneId.of("America/Chicago"));
 
-        ParkingRateRequest parkingRateRequest = new ParkingRateRequest();
-        parkingRateRequest.setStartTime(startTime);
-        parkingRateRequest.setEndTime(endTime);
+        String startTimeString = formatter.format(startTime);
+        String endTimeString = formatter.format(endTime);
 
         when(parkingRateService.findCurrentRateForDateTimeInterval(ArgumentMatchers.any(ZonedDateTime.class), ArgumentMatchers.any(ZonedDateTime.class))).thenReturn(4320);
 
-        mockMvc.perform(get("/api/parking/rate").contentType(MediaType.APPLICATION_JSON)
-                .content(getParkingRateRequestAsJson(parkingRateRequest)).accept(MediaType.APPLICATION_JSON_VALUE))
+        mockMvc.perform(get("/api/parking/rate/start/" + startTimeString + "/end/" + endTimeString).accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.statusCode").value(0))
                 .andExpect(jsonPath("$.message").value(""))
@@ -78,9 +78,8 @@ public class ParkingControllerTest {
         ZonedDateTime endTime =
                 ZonedDateTime.of(2019, 9, 12, 20, 0, 0, 0, ZoneId.of("America/Chicago"));
 
-        ParkingRateRequest parkingRateRequest = new ParkingRateRequest();
-        parkingRateRequest.setStartTime(startTime);
-        parkingRateRequest.setEndTime(endTime);
+        String startTimeString = formatter.format(startTime);
+        String endTimeString = formatter.format(endTime);
 
         ParkingApiErrorEnum parkingApiErrorEnum = ParkingApiErrorEnum.DATE_RANGE_SPANS_MULTIPLE_RATE;
         Integer errorCode = parkingApiErrorEnum.getErrorCode();
@@ -89,9 +88,7 @@ public class ParkingControllerTest {
         when(parkingRateService.findCurrentRateForDateTimeInterval(ArgumentMatchers.any(ZonedDateTime.class), ArgumentMatchers.any(ZonedDateTime.class))).
                 thenThrow(new ParkingServiceException(message, errorCode));
 
-        mockMvc.perform(get("/api/parking/rate").contentType(MediaType.APPLICATION_JSON)
-                .content(getParkingRateRequestAsJson(parkingRateRequest)).accept(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+        mockMvc.perform(get("/api/parking/rate/start/" + startTimeString + "/end/" + endTimeString).accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.statusCode").value(errorCode))
                 .andExpect(jsonPath("$.message").value(message))
                 .andExpect(jsonPath("$.price").value(ParkingController.UNAVAILABLE_PRICE))
@@ -108,11 +105,8 @@ public class ParkingControllerTest {
         ZonedDateTime endTime =
                 ZonedDateTime.of(2019, 9, 12, 12, 0, 0, 0, ZoneId.of("America/Chicago"));
 
-        ParkingRateRequest parkingRateRequest = new ParkingRateRequest();
-        parkingRateRequest.setStartTime(startTime);
-        parkingRateRequest.setEndTime(endTime);
-
-        System.out.println(getParkingRateRequestAsJson(parkingRateRequest));
+        String startTimeString = formatter.format(startTime);
+        String endTimeString = formatter.format(endTime);
 
         ParkingApiErrorEnum parkingApiErrorEnum = ParkingApiErrorEnum.START_DATE_END_DATE_SAME;
         Integer errorCode = parkingApiErrorEnum.getErrorCode();
@@ -121,8 +115,7 @@ public class ParkingControllerTest {
         when(parkingRateService.findCurrentRateForDateTimeInterval(ArgumentMatchers.any(ZonedDateTime.class), ArgumentMatchers.any(ZonedDateTime.class))).
                 thenThrow(new ParkingServiceException(message, errorCode));
 
-        mockMvc.perform(get("/api/parking/rate").contentType(MediaType.APPLICATION_JSON)
-                .content(getParkingRateRequestAsJson(parkingRateRequest)).accept(MediaType.APPLICATION_JSON_VALUE))
+        mockMvc.perform(get("/api/parking/rate/start/" + startTimeString + "/end/" + endTimeString).accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.statusCode").value(errorCode))
                 .andExpect(jsonPath("$.message").value(message))
@@ -164,18 +157,6 @@ public class ParkingControllerTest {
                 .andExpect(jsonPath("$.rates[0].tz", Matchers.equalTo("America/Chicago")))
                 .andExpect(jsonPath("$.rates[0].price", Matchers.equalTo(5320)))
                 .andExpect(status().isCreated());
-    }
-
-    private static String getParkingRateRequestAsJson(ParkingRateRequest parkingRateRequest) {
-        //Tells the mapper to represent a Date as a String in JSON.
-        ObjectMapper mapper = new ObjectMapper().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        mapper.registerModule(new JavaTimeModule());
-        try {
-            return mapper.writeValueAsString(parkingRateRequest);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     private static String getParkingRateListWrapperAsJson(ParkingRateListWrapper ParkingRateListWrapper) {
