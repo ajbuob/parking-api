@@ -1,0 +1,170 @@
+{
+	"info": {
+		"_postman_id": "81fdb971-c96f-49b5-b266-3865370222d0",
+		"name": "ParkingAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET /api/parking/rate (1750)",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"startTime\":\"2015-07-01T07:00:00-05:00\",\n    \"endTime\":  \"2015-07-01T12:00:00-05:00\"\n}"
+				},
+				"url": {
+					"raw": "localhost:8080/api/parking/rate",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"parking",
+						"rate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /api/parking/rate (2000)",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"startTime\":\"2015-07-04T15:00:00+00:00\",\n    \"endTime\":  \"2015-07-04T20:00:00+00:00\"\n}"
+				},
+				"url": {
+					"raw": "localhost:8080/api/parking/rate",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"parking",
+						"rate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /api/parking/rate (unavailabe)",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"startTime\":\"2015-07-04T07:00:00+05:00\",\n\t\"endTime\":  \"2015-07-04T20:00:00+05:00\"}"
+				},
+				"url": {
+					"raw": "localhost:8080/api/parking/rate",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"parking",
+						"rate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT /api/parking/rates",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "con",
+						"type": "text",
+						"value": ""
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"startTime\":\"2015-07-04T07:00:00+05:00\",\n\t\"endTime\":  \"2015-07-04T20:00:00+05:00\"}"
+				},
+				"url": {
+					"raw": "localhost:8080/api/parking/rate",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"parking",
+						"rate"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
