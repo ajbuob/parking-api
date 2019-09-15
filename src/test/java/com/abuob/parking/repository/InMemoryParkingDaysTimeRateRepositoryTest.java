@@ -39,7 +39,7 @@ public class InMemoryParkingDaysTimeRateRepositoryTest {
     @Test
     public void test_getDailyRateByHour_Success() {
         HourlyPriceDTO result = inMemoryParkingRateRepository.getDailyRateByHour(DayOfWeekEnum.SATURDAY, 23);
-        assertThat(result.getPrice()).isEqualTo(0);
+        assertThat(result.getPrice()).isEqualTo(2000);
     }
 
     @Test

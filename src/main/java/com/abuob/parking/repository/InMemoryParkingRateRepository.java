@@ -30,8 +30,7 @@ public class InMemoryParkingRateRepository implements ParkingRateRepository {
     @Autowired
     ResourceLoader resourceLoader;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     private Map<DayOfWeekEnum, Map<Integer, Integer>> parkingRateMap;
 
