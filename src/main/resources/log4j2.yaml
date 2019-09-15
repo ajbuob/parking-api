@@ -1,0 +1,23 @@
+Configutation:
+  name: DefaultConfiguration
+
+  Appenders:
+
+    Console:
+      name: ConsoleAppender
+      target: SYSTEM_OUT
+      PatternLayout:
+        pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-40.40c{1.} - %msg%n"
+
+  Loggers:
+    logger:
+      - name: com.abuob.parking
+        level: INFO
+        additivity: false
+        AppenderRef:
+          - ref: ConsoleAppender
+
+    Root:
+      level: INFO
+      AppenderRef:
+        - ref: ConsoleAppender
