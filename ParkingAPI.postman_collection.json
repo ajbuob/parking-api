@@ -124,6 +124,42 @@
 		},
 		{
 			"name": "PUT /api/parking/rates",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n   \"rates\":[ \n      { \n         \"days\":\"sat,sun\",\n         \"times\":\"0900-1700\",\n         \"tz\":\"America/Chicago\",\n         \"price\":5320\n      },\n      { \n         \"days\":\"tues,thurs\",\n         \"times\":\"0900-1700\",\n         \"tz\":\"America/Chicago\",\n         \"price\":6340\n      }\n   ]\n}"
+				},
+				"url": {
+					"raw": "localhost:8080/api/parking/rates",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"parking",
+						"rates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /api/parking/rate (6340)",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -134,11 +170,6 @@
 						"key": "Accept",
 						"type": "text",
 						"value": "application/json"
-					},
-					{
-						"key": "con",
-						"type": "text",
-						"value": ""
 					},
 					{
 						"key": "Content-Type",
