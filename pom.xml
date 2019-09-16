@@ -10,6 +10,7 @@
     </parent>
     <groupId>com.abuob.parking</groupId>
     <artifactId>parking-api</artifactId>
+    <packaging>war</packaging>
     <version>0.0.1-SNAPSHOT</version>
     <name>parking-api</name>
 
