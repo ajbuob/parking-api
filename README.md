@@ -3,7 +3,7 @@
 ## Build/Run 
 
 * A deployable war file can be created in the target directory using the standard Maven command (`mvn package`) and then deployed to any compatible servlet container. 
-* Alternatively, the application can be run using the included spring-boot-starter-tomcat dependency using the Maven command : `mvn test`
+* Alternatively, the application can be run using the included spring-boot-starter-tomcat dependency using the Maven command : `mvn spring-boot:run`
 * Application can be accessed at http://localhost:8080/api/pairking
 
 ## Test
