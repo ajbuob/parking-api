@@ -94,7 +94,7 @@ public class ParkingControllerTest {
                 .andExpect(jsonPath("$.price").value(ParkingController.UNAVAILABLE_PRICE))
                 .andExpect(jsonPath("$.startTime").value("2019-09-12T12:00:00-05:00"))
                 .andExpect(jsonPath("$.endTime").value("2019-09-12T20:00:00-05:00"))
-                .andExpect(status().isOk());
+                .andExpect(status().isBadRequest());
     }
 
     @Test

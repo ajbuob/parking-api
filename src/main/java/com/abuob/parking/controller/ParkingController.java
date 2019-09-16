@@ -88,7 +88,6 @@ public class ParkingController {
             //Check for date span over multiple rates
             if (errorCode == ParkingApiErrorEnum.DATE_RANGE_SPANS_MULTIPLE_RATE.getErrorCode()) {
                 parkingRateResponse.setPrice(UNAVAILABLE_PRICE);
-                return new ResponseEntity<>(parkingRateResponse, HttpStatus.OK);
             }
             return new ResponseEntity<>(parkingRateResponse, HttpStatus.BAD_REQUEST);
         }
