@@ -4,7 +4,7 @@ import com.abuob.parking.enums.DayOfWeekEnum;
 
 import java.util.Objects;
 
-public class HourlyPriceDTO {
+public class RateDTO {
 
     private DayOfWeekEnum dayOfWeek;
 
@@ -12,14 +12,14 @@ public class HourlyPriceDTO {
 
     private Integer price;
 
-    public HourlyPriceDTO() {
+    public RateDTO() {
     }
 
     public DayOfWeekEnum getDayOfWeek() {
         return dayOfWeek;
     }
 
-    public HourlyPriceDTO(DayOfWeekEnum dayOfWeek, Integer hourOfDay, Integer price) {
+    public RateDTO(DayOfWeekEnum dayOfWeek, Integer hourOfDay, Integer price) {
         this.dayOfWeek = dayOfWeek;
         this.hourOfDay = hourOfDay;
         this.price = price;
@@ -49,10 +49,10 @@ public class HourlyPriceDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        HourlyPriceDTO hourlyPriceDTO = (HourlyPriceDTO) o;
-        return dayOfWeek == hourlyPriceDTO.dayOfWeek &&
-                hourOfDay.equals(hourlyPriceDTO.hourOfDay) &&
-                price.equals(hourlyPriceDTO.price);
+        RateDTO rateDTO = (RateDTO) o;
+        return dayOfWeek == rateDTO.dayOfWeek &&
+                hourOfDay.equals(rateDTO.hourOfDay) &&
+                price.equals(rateDTO.price);
     }
 
     @Override

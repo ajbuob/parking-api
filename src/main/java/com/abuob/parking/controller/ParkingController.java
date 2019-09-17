@@ -1,7 +1,7 @@
 package com.abuob.parking.controller;
 
 
-import com.abuob.parking.dto.HourlyPriceDTO;
+import com.abuob.parking.dto.RateDTO;
 import com.abuob.parking.service.ParkingApiErrorEnum;
 import com.abuob.parking.service.ParkingRateService;
 import com.abuob.parking.service.ParkingServiceException;
@@ -104,13 +104,13 @@ public class ParkingController {
         List<ParkingRateCreateRequest> responseRatesList = Lists.newArrayList();
         responseWrapper.setRates(responseRatesList);
 
-        List<HourlyPriceDTO> hourlyPriceDTOList;
+        List<RateDTO> rateDTOList;
         boolean result;
 
         //Process each rate request separately and add to the response if the add is successful
         for (ParkingRateCreateRequest parkingRateCreateRequest : inputRatesList) {
-            hourlyPriceDTOList = ParkingRateUtil.convertToRateDTO(Lists.newArrayList(parkingRateCreateRequest));
-            result = parkingRateService.addHourlyPrices(hourlyPriceDTOList);
+            rateDTOList = ParkingRateUtil.convertToRateDTO(Lists.newArrayList(parkingRateCreateRequest));
+            result = parkingRateService.addHourlyPrices(rateDTOList);
             if (result) {
                 responseRatesList.add(parkingRateCreateRequest);
             }

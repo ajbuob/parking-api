@@ -1,6 +1,6 @@
 package com.abuob.parking.repository;
 
-import com.abuob.parking.dto.HourlyPriceDTO;
+import com.abuob.parking.dto.RateDTO;
 import com.abuob.parking.enums.DayOfWeekEnum;
 import com.abuob.parking.utils.ParkingRateUtil;
 import com.abuob.parking.web.request.ParkingRateCreateRequest;
@@ -56,8 +56,8 @@ public class InMemoryParkingRateRepository implements ParkingRateRepository {
             ParkingRateListWrapper parkingRateWrapper = objectMapper.readValue(resourceInputStream, ParkingRateListWrapper.class);
             List<ParkingRateCreateRequest> initialParkingDaysTimeRatesListRequest = parkingRateWrapper.getRates();
 
-            List<HourlyPriceDTO> hourlyPriceDTOList = ParkingRateUtil.convertToRateDTO(initialParkingDaysTimeRatesListRequest);
-            Boolean isInitialized = updateAllRates(hourlyPriceDTOList);
+            List<RateDTO> rateDTOList = ParkingRateUtil.convertToRateDTO(initialParkingDaysTimeRatesListRequest);
+            Boolean isInitialized = updateAllRates(rateDTOList);
             logger.debug("isInitialized: {}", isInitialized);
 
         } catch (IOException e) {
@@ -66,28 +66,28 @@ public class InMemoryParkingRateRepository implements ParkingRateRepository {
     }
 
     @Override
-    public HourlyPriceDTO getDailyRateByHour(DayOfWeekEnum dayOfWeekEnum, Integer hourOfDay) {
-        HourlyPriceDTO hourlyPriceDTO = new HourlyPriceDTO(dayOfWeekEnum, hourOfDay, 0);
+    public RateDTO getDailyRateByHour(DayOfWeekEnum dayOfWeekEnum, Integer hourOfDay) {
+        RateDTO rateDTO = new RateDTO(dayOfWeekEnum, hourOfDay, 0);
         Integer currentPrice;
         //Add the current rate if the input is valid
         if (!Objects.isNull(dayOfWeekEnum) && !Objects.isNull(hourOfDay) && hourOfDay > 0 && hourOfDay <= 23) {
             currentPrice = parkingRateMap.get(dayOfWeekEnum).get(hourOfDay);
             logger.debug("getDailyRateByHour - dayOfWeek: {} hourOfDay: {} price: {}", dayOfWeekEnum, hourOfDay, currentPrice);
-            hourlyPriceDTO.setPrice(currentPrice);
+            rateDTO.setPrice(currentPrice);
         }
-        return hourlyPriceDTO;
+        return rateDTO;
     }
 
-    public boolean updateAllRates(List<HourlyPriceDTO> hourlyPriceDTOList) {
+    public boolean updateAllRates(List<RateDTO> rateDTOList) {
         DayOfWeekEnum dayOfWeek;
         Integer hourOfDay;
         Integer price;
         Map<Integer, Integer> dailyRateMap;
 
-        for (HourlyPriceDTO hourlyPriceDTO : hourlyPriceDTOList) {
-            dayOfWeek = hourlyPriceDTO.getDayOfWeek();
-            hourOfDay = hourlyPriceDTO.getHourOfDay();
-            price = hourlyPriceDTO.getPrice();
+        for (RateDTO rateDTO : rateDTOList) {
+            dayOfWeek = rateDTO.getDayOfWeek();
+            hourOfDay = rateDTO.getHourOfDay();
+            price = rateDTO.getPrice();
 
             logger.debug("updateAllRates - dayOfWeek: {} hourOfDay: {} price: {}", dayOfWeek, hourOfDay, price);
             dailyRateMap = parkingRateMap.get(dayOfWeek);

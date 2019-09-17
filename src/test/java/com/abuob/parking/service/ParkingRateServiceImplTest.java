@@ -1,6 +1,6 @@
 package com.abuob.parking.service;
 
-import com.abuob.parking.dto.HourlyPriceDTO;
+import com.abuob.parking.dto.RateDTO;
 import com.abuob.parking.enums.DayOfWeekEnum;
 import com.abuob.parking.repository.ParkingRateRepository;
 import com.google.common.collect.Lists;
@@ -76,17 +76,17 @@ public class ParkingRateServiceImplTest {
         ZonedDateTime endDateTime =
                 ZonedDateTime.of(2019, 8, 4, 15, 0, 0, 0, ZoneId.of("America/Chicago"));
 
-        HourlyPriceDTO hourlyPriceDTO1 = new HourlyPriceDTO();
-        hourlyPriceDTO1.setDayOfWeek(DayOfWeekEnum.SUNDAY);
-        hourlyPriceDTO1.setHourOfDay(10);
-        hourlyPriceDTO1.setPrice(100);
+        RateDTO rateDTO1 = new RateDTO();
+        rateDTO1.setDayOfWeek(DayOfWeekEnum.SUNDAY);
+        rateDTO1.setHourOfDay(10);
+        rateDTO1.setPrice(100);
 
-        HourlyPriceDTO hourlyPriceDTO2 = new HourlyPriceDTO();
-        hourlyPriceDTO2.setDayOfWeek(DayOfWeekEnum.SUNDAY);
-        hourlyPriceDTO2.setHourOfDay(11);
-        hourlyPriceDTO2.setPrice(200);
+        RateDTO rateDTO2 = new RateDTO();
+        rateDTO2.setDayOfWeek(DayOfWeekEnum.SUNDAY);
+        rateDTO2.setHourOfDay(11);
+        rateDTO2.setPrice(200);
 
-        when(parkingRateRepository.getDailyRateByHour(any(DayOfWeekEnum.class), anyInt())).thenReturn(hourlyPriceDTO1, hourlyPriceDTO2);
+        when(parkingRateRepository.getDailyRateByHour(any(DayOfWeekEnum.class), anyInt())).thenReturn(rateDTO1, rateDTO2);
 
         assertThatThrownBy(() -> {
             parkingRateService.findCurrentRateForDateTimeInterval(startDateTime, endDateTime);
@@ -101,61 +101,61 @@ public class ParkingRateServiceImplTest {
         ZonedDateTime endDateTime =
                 ZonedDateTime.of(2019, 8, 4, 15, 0, 0, 0, ZoneId.of("America/Chicago"));
 
-        HourlyPriceDTO hourlyPriceDTO1 = new HourlyPriceDTO();
-        hourlyPriceDTO1.setDayOfWeek(DayOfWeekEnum.SUNDAY);
-        hourlyPriceDTO1.setHourOfDay(10);
-        hourlyPriceDTO1.setPrice(100);
+        RateDTO rateDTO1 = new RateDTO();
+        rateDTO1.setDayOfWeek(DayOfWeekEnum.SUNDAY);
+        rateDTO1.setHourOfDay(10);
+        rateDTO1.setPrice(100);
         //Return the same price for every call to the mock
-        when(parkingRateRepository.getDailyRateByHour(any(DayOfWeekEnum.class), anyInt())).thenReturn(hourlyPriceDTO1);
+        when(parkingRateRepository.getDailyRateByHour(any(DayOfWeekEnum.class), anyInt())).thenReturn(rateDTO1);
         assertThat(parkingRateService.findCurrentRateForDateTimeInterval(startDateTime, endDateTime)).isEqualTo(100);
     }
 
     @Test
     public void test_updateRate_Success() {
-        HourlyPriceDTO hourlyPriceDTO = new HourlyPriceDTO(DayOfWeekEnum.FRIDAY, 10, 3700);
+        RateDTO rateDTO = new RateDTO(DayOfWeekEnum.FRIDAY, 10, 3700);
         when(parkingRateRepository.updateAllRates(anyList())).thenReturn(Boolean.TRUE);
-        assertThat(parkingRateService.addHourlyPrices(Lists.newArrayList(hourlyPriceDTO))).isTrue();
+        assertThat(parkingRateService.addHourlyPrices(Lists.newArrayList(rateDTO))).isTrue();
     }
 
     @Test
     public void test_addHourlyPrices_validate_Nulls() {
-        HourlyPriceDTO hourlyPriceDTO = new HourlyPriceDTO(null, null, null);
-        assertThat(parkingRateService.addHourlyPrices(Lists.newArrayList(hourlyPriceDTO))).isFalse();
+        RateDTO rateDTO = new RateDTO(null, null, null);
+        assertThat(parkingRateService.addHourlyPrices(Lists.newArrayList(rateDTO))).isFalse();
 
-        hourlyPriceDTO = new HourlyPriceDTO(DayOfWeekEnum.SATURDAY, null, null);
-        assertThat(parkingRateService.addHourlyPrices(Lists.newArrayList(hourlyPriceDTO))).isFalse();
+        rateDTO = new RateDTO(DayOfWeekEnum.SATURDAY, null, null);
+        assertThat(parkingRateService.addHourlyPrices(Lists.newArrayList(rateDTO))).isFalse();
 
-        hourlyPriceDTO = new HourlyPriceDTO(DayOfWeekEnum.SATURDAY, 4, null);
-        assertThat(parkingRateService.addHourlyPrices(Lists.newArrayList(hourlyPriceDTO))).isFalse();
+        rateDTO = new RateDTO(DayOfWeekEnum.SATURDAY, 4, null);
+        assertThat(parkingRateService.addHourlyPrices(Lists.newArrayList(rateDTO))).isFalse();
 
-        hourlyPriceDTO = new HourlyPriceDTO(null, 4, 5600);
-        assertThat(parkingRateService.addHourlyPrices(Lists.newArrayList(hourlyPriceDTO))).isFalse();
+        rateDTO = new RateDTO(null, 4, 5600);
+        assertThat(parkingRateService.addHourlyPrices(Lists.newArrayList(rateDTO))).isFalse();
 
-        hourlyPriceDTO = new HourlyPriceDTO(DayOfWeekEnum.MONDAY, null, 5600);
-        assertThat(parkingRateService.addHourlyPrices(Lists.newArrayList(hourlyPriceDTO))).isFalse();
+        rateDTO = new RateDTO(DayOfWeekEnum.MONDAY, null, 5600);
+        assertThat(parkingRateService.addHourlyPrices(Lists.newArrayList(rateDTO))).isFalse();
 
-        hourlyPriceDTO = new HourlyPriceDTO(null, 20, null);
-        assertThat(parkingRateService.addHourlyPrices(Lists.newArrayList(hourlyPriceDTO))).isFalse();
+        rateDTO = new RateDTO(null, 20, null);
+        assertThat(parkingRateService.addHourlyPrices(Lists.newArrayList(rateDTO))).isFalse();
     }
 
     @Test
     public void test_updateRate_HoursBounds() {
-        HourlyPriceDTO hourlyPriceDTO = new HourlyPriceDTO(DayOfWeekEnum.FRIDAY, -1, 3200);
-        assertThat(parkingRateService.addHourlyPrices(Lists.newArrayList(hourlyPriceDTO))).isFalse();
+        RateDTO rateDTO = new RateDTO(DayOfWeekEnum.FRIDAY, -1, 3200);
+        assertThat(parkingRateService.addHourlyPrices(Lists.newArrayList(rateDTO))).isFalse();
 
-        hourlyPriceDTO = new HourlyPriceDTO(DayOfWeekEnum.FRIDAY, 24, 3200);
-        assertThat(parkingRateService.addHourlyPrices(Lists.newArrayList(hourlyPriceDTO))).isFalse();
+        rateDTO = new RateDTO(DayOfWeekEnum.FRIDAY, 24, 3200);
+        assertThat(parkingRateService.addHourlyPrices(Lists.newArrayList(rateDTO))).isFalse();
 
-        hourlyPriceDTO = new HourlyPriceDTO(DayOfWeekEnum.FRIDAY, 432, 3200);
-        assertThat(parkingRateService.addHourlyPrices(Lists.newArrayList(hourlyPriceDTO))).isFalse();
+        rateDTO = new RateDTO(DayOfWeekEnum.FRIDAY, 432, 3200);
+        assertThat(parkingRateService.addHourlyPrices(Lists.newArrayList(rateDTO))).isFalse();
     }
 
     @Test
     public void test_updateRate_RateBounds() {
-        HourlyPriceDTO hourlyPriceDTO = new HourlyPriceDTO(DayOfWeekEnum.FRIDAY, 10, -1);
-        assertThat(parkingRateService.addHourlyPrices(Lists.newArrayList(hourlyPriceDTO))).isFalse();
+        RateDTO rateDTO = new RateDTO(DayOfWeekEnum.FRIDAY, 10, -1);
+        assertThat(parkingRateService.addHourlyPrices(Lists.newArrayList(rateDTO))).isFalse();
 
-        hourlyPriceDTO = new HourlyPriceDTO(DayOfWeekEnum.FRIDAY, 10, -14);
-        assertThat(parkingRateService.addHourlyPrices(Lists.newArrayList(hourlyPriceDTO))).isFalse();
+        rateDTO = new RateDTO(DayOfWeekEnum.FRIDAY, 10, -14);
+        assertThat(parkingRateService.addHourlyPrices(Lists.newArrayList(rateDTO))).isFalse();
     }
 }

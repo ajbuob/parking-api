@@ -1,6 +1,6 @@
 package com.abuob.parking.service;
 
-import com.abuob.parking.dto.HourlyPriceDTO;
+import com.abuob.parking.dto.RateDTO;
 import com.abuob.parking.enums.DayOfWeekEnum;
 import com.abuob.parking.repository.ParkingRateRepository;
 import com.abuob.parking.utils.DateUtil;
@@ -108,21 +108,21 @@ public class ParkingRateServiceImpl implements ParkingRateService {
     }
 
     @Override
-    public boolean addHourlyPrices(List<HourlyPriceDTO> hourlyPriceDTOList) {
-        Boolean isValid = validateHourlyPriceList(hourlyPriceDTOList);
-        return isValid ? parkingRateRepository.updateAllRates(hourlyPriceDTOList) : Boolean.FALSE;
+    public boolean addHourlyPrices(List<RateDTO> rateDTOList) {
+        Boolean isValid = validateHourlyPriceList(rateDTOList);
+        return isValid ? parkingRateRepository.updateAllRates(rateDTOList) : Boolean.FALSE;
     }
 
-    private boolean validateHourlyPriceList(List<HourlyPriceDTO> hourlyPriceDTOList) {
+    private boolean validateHourlyPriceList(List<RateDTO> rateDTOList) {
         Integer price;
         Integer hourOfDay;
 
-        for (HourlyPriceDTO hourlyPriceDTO : hourlyPriceDTOList) {
-            price = hourlyPriceDTO.getPrice();
-            hourOfDay = hourlyPriceDTO.getHourOfDay();
+        for (RateDTO rateDTO : rateDTOList) {
+            price = rateDTO.getPrice();
+            hourOfDay = rateDTO.getHourOfDay();
 
             //Validate all the input
-            if (Objects.isNull(hourlyPriceDTO) || Objects.isNull(hourlyPriceDTO.getDayOfWeek())) {
+            if (Objects.isNull(rateDTO) || Objects.isNull(rateDTO.getDayOfWeek())) {
                 return Boolean.FALSE;
             }
 

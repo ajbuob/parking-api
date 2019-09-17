@@ -1,6 +1,6 @@
 package com.abuob.parking.utils;
 
-import com.abuob.parking.dto.HourlyPriceDTO;
+import com.abuob.parking.dto.RateDTO;
 import com.abuob.parking.enums.DayOfWeekEnum;
 import com.abuob.parking.web.request.ParkingRateCreateRequest;
 import org.assertj.core.util.Lists;
@@ -19,13 +19,13 @@ public class ParkingDaysTimeRateUtilTest {
         ParkingRateCreateRequest parkingDaysTimeRate = new ParkingRateCreateRequest("wed", "1000-1700", "America/Chicago", 3250);
         parkingDaysTimeRateList.add(parkingDaysTimeRate);
 
-        List<HourlyPriceDTO> hourlyPriceDTOList = ParkingRateUtil.convertToRateDTO(parkingDaysTimeRateList);
-        assertThat(hourlyPriceDTOList).isNotNull();
-        assertThat(hourlyPriceDTOList).isNotEmpty();
-        assertThat(hourlyPriceDTOList).hasSize(7);
+        List<RateDTO> rateDTOList = ParkingRateUtil.convertToRateDTO(parkingDaysTimeRateList);
+        assertThat(rateDTOList).isNotNull();
+        assertThat(rateDTOList).isNotEmpty();
+        assertThat(rateDTOList).hasSize(7);
 
-        for (HourlyPriceDTO hourlyPriceDTO : hourlyPriceDTOList) {
-            assertThat(hourlyPriceDTO.getDayOfWeek()).isEqualTo(DayOfWeekEnum.WEDNESDAY);
+        for (RateDTO rateDTO : rateDTOList) {
+            assertThat(rateDTO.getDayOfWeek()).isEqualTo(DayOfWeekEnum.WEDNESDAY);
         }
     }
 
@@ -36,14 +36,14 @@ public class ParkingDaysTimeRateUtilTest {
         ParkingRateCreateRequest parkingDaysTimeRate = new ParkingRateCreateRequest("wed", "1600-2200", "America/Chicago", 3250);
         parkingDaysTimeRateList.add(parkingDaysTimeRate);
 
-        List<HourlyPriceDTO> hourlyPriceDTOList = ParkingRateUtil.convertToRateDTO(parkingDaysTimeRateList);
-        assertThat(hourlyPriceDTOList).isNotNull();
-        assertThat(hourlyPriceDTOList).isNotEmpty();
-        assertThat(hourlyPriceDTOList).hasSize(6);
+        List<RateDTO> rateDTOList = ParkingRateUtil.convertToRateDTO(parkingDaysTimeRateList);
+        assertThat(rateDTOList).isNotNull();
+        assertThat(rateDTOList).isNotEmpty();
+        assertThat(rateDTOList).hasSize(6);
 
-        for (HourlyPriceDTO hourlyPriceDTO : hourlyPriceDTOList) {
-            assertThat(hourlyPriceDTO.getDayOfWeek().equals(DayOfWeekEnum.WEDNESDAY) ||
-                    hourlyPriceDTO.getDayOfWeek().equals(DayOfWeekEnum.THURSDAY)).isTrue();
+        for (RateDTO rateDTO : rateDTOList) {
+            assertThat(rateDTO.getDayOfWeek().equals(DayOfWeekEnum.WEDNESDAY) ||
+                    rateDTO.getDayOfWeek().equals(DayOfWeekEnum.THURSDAY)).isTrue();
         }
     }
 }

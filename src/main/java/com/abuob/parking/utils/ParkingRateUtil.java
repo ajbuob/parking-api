@@ -1,7 +1,7 @@
 package com.abuob.parking.utils;
 
 
-import com.abuob.parking.dto.HourlyPriceDTO;
+import com.abuob.parking.dto.RateDTO;
 import com.abuob.parking.enums.DayOfWeekEnum;
 import com.abuob.parking.web.request.ParkingRateCreateRequest;
 import com.google.common.collect.Lists;
@@ -17,7 +17,7 @@ public final class ParkingRateUtil {
     private ParkingRateUtil() {
     }
 
-    public static List<HourlyPriceDTO> convertToRateDTO(List<ParkingRateCreateRequest> parkingRateCreateRequestList) {
+    public static List<RateDTO> convertToRateDTO(List<ParkingRateCreateRequest> parkingRateCreateRequestList) {
         //Assumes the input parking rate list can have multiple timezones,
         //each day of week and start of day map will be stored as value with timezone as key
         Map<String, Map<DayOfWeekEnum, ZonedDateTime>> tzToDayOfWeekMap = new HashMap<>();
@@ -30,7 +30,7 @@ public final class ParkingRateUtil {
         String startTime, endTime;
         Integer startHour, endHour;
 
-        List<HourlyPriceDTO> hourlyPriceDTOList = Lists.newArrayList();
+        List<RateDTO> rateDTOList = Lists.newArrayList();
 
         //Process each parking rate by converting to UTC
         for (ParkingRateCreateRequest parkingRateCreateRequest : parkingRateCreateRequestList) {
@@ -53,7 +53,7 @@ public final class ParkingRateUtil {
             }
 
             //Process each day in the parking rate (start and end time are constant)
-            //to construct a HourlyPriceDTO in UTC
+            //to construct a RateDTO in UTC
             DayOfWeekEnum dayOfWeekEnum;
             ZonedDateTime currentStartDay;
             for (String day : daysList) {
@@ -62,20 +62,20 @@ public final class ParkingRateUtil {
                 currentStartDay = startOfEachDayOfWeekMap.get(dayOfWeekEnum);
 
                 ZonedDateTime currentDay, currentDayUTC;
-                HourlyPriceDTO hourlyPriceDTO;
+                RateDTO rateDTO;
                 for (int i = startHour; i <= endHour - 1; i++) {
-                    hourlyPriceDTO = new HourlyPriceDTO();
-                    hourlyPriceDTO.setPrice(price);
+                    rateDTO = new RateDTO();
+                    rateDTO.setPrice(price);
 
                     currentDay = currentStartDay.plusHours(i);
                     currentDayUTC = DateUtil.convertToUTC(currentDay);
 
-                    hourlyPriceDTO.setHourOfDay(currentDayUTC.getHour());
-                    hourlyPriceDTO.setDayOfWeek(DayOfWeekEnum.valueOf(currentDayUTC.getDayOfWeek().name()));
-                    hourlyPriceDTOList.add(hourlyPriceDTO);
+                    rateDTO.setHourOfDay(currentDayUTC.getHour());
+                    rateDTO.setDayOfWeek(DayOfWeekEnum.valueOf(currentDayUTC.getDayOfWeek().name()));
+                    rateDTOList.add(rateDTO);
                 }
             }
         }
-        return hourlyPriceDTOList;
+        return rateDTOList;
     }
 }
