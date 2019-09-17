@@ -15,4 +15,6 @@
 * I have included the Springfox Swagger 2 dependencies in the projects pom.xml file and have made some basic annotations in ParkingController.java. This can be accessed in the browser at http://localhost:8080/swagger-ui.html
 
 ## Design/Notes
+* To support the possibility of multiple different timezones in the input JSON, the method `public static List<RateDTO> convertToRateDTO(List<ParkingRateCreateRequest> parkingRateCreateRequestList)` in `ParkingRateUtil.java` stores a representative of each day of the week for each timezone in the `Map<String, Map<DayOfWeekEnum, ZonedDateTime>>` data structure where the key string is the timezone. This is done to not have to do the map computation multiple times for each timezone in the input.  
+* The InMemoryParkingRateRepository stores the tuples `(day of week, hour of day, price)` in the data structure `Map<DayOfWeekEnum, Map<Integer, Integer>> ` in UTC and doesn’t take DST into account. I would solve this using the structure `Map<String, Map<DayOfWeekEnum, Map<Integer, Integer>> >` where the key String is the timezone and not doing conversion to UTC before adding to the repository. The tuple would then become: `(timezone, day of week, hour of day, price)`
 
